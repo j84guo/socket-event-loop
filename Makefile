@@ -1,11 +1,28 @@
-.PHONY: clean client
+CC :=  gcc
 
-all: client
+SRCDIR := src
+BINDIR := bin
+TARGET := $(BINDIR)/client
 
-client: client.c llist.c llist.h tcpcon.c tcpcon.h elp.c elp.h
-	mkdir -p bin
-	gcc -o bin/client -Wall -pthread -I . client.c llist.c tcpcon.c elp.c
-	@echo "Built into bin/client"
+SRCTEXT := c
+SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCTEXT))
+#patsubst pattern,replacement,text
+OBJECTS := $(patsubst $(SRCDIR)/%,$(BINDIR)/%,$(SOURCES:.$(SRCTEXT)=.o))
+CFLAGS := -Wall
+LIB := -pthread
+INC := $(SRCDIR)
+
+all: $(TARGET)
+
+$(TARGET): $(OBJECTS)
+	$(CC) $^ -o $@ $(LIB)
+	@echo "Built into $(BINDIR)/"
+
+$(BINDIR)/%.o: $(SRCDIR)/%.$(SRCTEXT)
+	@mkdir -p $(BINDIR)
+	$(CC) $(CFLAGS) -I $(INC) -c -o $@ $<
 
 clean:
-	rm -rf bin
+	@rm -rf $(BINDIR)/*
+
+.PHONY: clean all

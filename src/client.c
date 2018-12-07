@@ -48,11 +48,6 @@ int stdin_loop(elpinfo_t *info)
     return 0;
 }
 
-/**
- * todo:
- * - release mutex on cleanup
- * - does pthread_create need to be checked
- */
 int main(int argc, char **argv)
 {
     if (arg_check(argc, argv))
@@ -74,3 +69,4 @@ int main(int argc, char **argv)
 
     return ret;
 }
+
